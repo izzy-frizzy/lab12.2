@@ -11,6 +11,10 @@ app.get('/', (req,res) => {
 app.get('/api/fun-fact', async(req, res) =>{
     try{
         const response = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random')
+         
+        if (!response.ok) {
+            throw new Error(`API responded with status ${response.status}`)
+        }
 
         const funFacts = await response.json()
 
@@ -19,7 +23,8 @@ app.get('/api/fun-fact', async(req, res) =>{
         res.json({fact:  funFacts.text})
 
     }catch(e){
-        res.send(e)
+       console.error(error)
+        res.status(500).json({ error: "Could not fetch fun fact" })
     }
 })
 
